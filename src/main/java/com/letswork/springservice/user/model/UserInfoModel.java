@@ -1,21 +1,35 @@
 package com.letswork.springservice.user.model;
 
 import com.letswork.springservice.repositories.entities.UserEntity;
+import com.letswork.springservice.utils.ObjectUtil;
+
+import java.util.List;
 
 public class UserInfoModel {
-    String userName;
 
-    String firstName;
+    private Long id;
 
-    String lastName;
+    private String userName;
 
-    String email;
+    private String firstName;
 
-    String company;
+    private String lastName;
 
-    String bio;
+    private String email;
 
-    String country;
+    private String company;
+
+    private String bio;
+
+    private String country;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getUserName() {
         return userName;
@@ -76,6 +90,7 @@ public class UserInfoModel {
     public UserInfoModel(){ }
 
     public UserInfoModel(UserEntity entity){
+        this.id = entity.getId();
         this.userName = entity.getUserName();
         this.firstName = entity.getFirstName();
         this.lastName = entity.getLastName();
@@ -83,5 +98,10 @@ public class UserInfoModel {
         this.company = entity.getCompany();
         this.bio = entity.getBio();
         this.country = entity.getCountry();
+    }
+
+    public static List<UserInfoModel> covertFromUserEntity(List<UserEntity> userEntities){
+        ObjectUtil<UserEntity, UserInfoModel> converter = UserInfoModel::new;
+        return converter.convertToList(userEntities);
     }
 }

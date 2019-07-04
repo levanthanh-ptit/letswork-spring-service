@@ -23,7 +23,7 @@ public class GFG {
 	public static String randomFirstName() {
 		Random rd = new Random();
 		String ans = "";
-		ans += " " + name[rd.nextInt(4)];
+		ans += name[rd.nextInt(4)];
 		return ans;
 	}
 
@@ -56,7 +56,9 @@ public class GFG {
 		int leng = rd.nextInt(16);
 		String ans = "";
 		for (int i = 0; i < 6 + leng; i++) {
-			ans += (char) ((int) 'A' + rd.nextInt(47));
+			int x = 65 + rd.nextInt(57);
+			if(x>90 && x<97) x= 48 + rd.nextInt(9);
+			ans += (char) x;
 		}
 		return ans += "@gmail.com";
 	}

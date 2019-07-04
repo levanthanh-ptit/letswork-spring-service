@@ -120,8 +120,10 @@ public class UserEntity {
     @NotFound(action = NotFoundAction.IGNORE)
     @OneToMany(
             cascade = CascadeType.ALL,
-            mappedBy = "project",
-            fetch = FetchType.LAZY
+            mappedBy = "user",
+            fetch = FetchType.LAZY,
+            orphanRemoval = true,
+            targetEntity = RoleEntity.class
     )
     private List<RoleEntity> projects = new ArrayList<>();
 

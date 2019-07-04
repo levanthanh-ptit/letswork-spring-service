@@ -1,15 +1,23 @@
 package com.letswork.springservice.project.model;
 
+import com.letswork.springservice.repositories.entities.UserEntity;
+
 public class MemberInfoModel {
-    private Long id;
+    Long id;
 
-    private String fullName;
+    String fullName;
 
-    private String ownership;
+    String ownership;
 
     public MemberInfoModel(Long id, String fullName, String ownership) {
         this.id = id;
         this.fullName = fullName;
+        this.ownership = ownership;
+    }
+
+    public MemberInfoModel(UserEntity user, String ownership) {
+        this.id = user.getId();
+        this.fullName = user.getFirstName() + " " + user.getLastName();
         this.ownership = ownership;
     }
 

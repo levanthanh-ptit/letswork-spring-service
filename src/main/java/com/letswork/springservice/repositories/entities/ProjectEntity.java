@@ -56,9 +56,11 @@ public class ProjectEntity {
     // Bidirectional mapping to UserEntity
     @NotFound(action = NotFoundAction.IGNORE)
     @OneToMany(
-            cascade = CascadeType.PERSIST,
-            mappedBy = "user",
-            fetch = FetchType.LAZY
+            cascade = CascadeType.ALL,
+            mappedBy = "project",
+            fetch = FetchType.LAZY,
+            orphanRemoval = true,
+            targetEntity = RoleEntity.class
     )
     private List<RoleEntity> users = new ArrayList<>();
 
@@ -66,7 +68,7 @@ public class ProjectEntity {
         return users;
     }
 
-    public void addUsers(UserEntity userEntity, String role) {
+    public void addUser(UserEntity userEntity, String role) {
         RoleEntity roleEntity = new RoleEntity(this, userEntity, role);
         users.add(roleEntity);
         userEntity.getProjects().add(roleEntity);
@@ -74,7 +76,7 @@ public class ProjectEntity {
 
     public void removeUsers(UserEntity userEntity) {
         for (RoleEntity e : users) {
-            if(e.getProject().equals(this) && e.getUser().equals(userEntity)){
+            if (e.getProject().equals(this) && e.getUser().equals(userEntity)) {
                 users.remove(e);
                 e.getUser().getProjects().remove(e);
                 e.getProject().getUsers().remove(e);
@@ -82,6 +84,21 @@ public class ProjectEntity {
                 e.setProject(null);
             }
         }
+    }
+
+    // Bidirectional mapping to TaskEntity
+    @NotFound(action = NotFoundAction.IGNORE)
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            mappedBy = "project",
+            fetch = FetchType.LAZY,
+            orphanRemoval = true,
+            targetEntity = TaskEntity.class
+    )
+    List<TaskEntity> tasks = new ArrayList<>();
+
+    public List<TaskEntity> getTasks() {
+        return tasks;
     }
 
     @Override
