@@ -1,6 +1,7 @@
 package com.letswork.springservice.repositories.entities;
 
 import lombok.Data;
+import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.springframework.validation.annotation.Validated;
@@ -19,12 +20,16 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NaturalId
+    @Column(unique = true)
     private String userName;
 
     private String firstName;
 
     private String lastName;
 
+    @NaturalId
+    @Column(unique = true)
     private String email;
 
     private String company;

@@ -45,6 +45,26 @@ public class TaskEntity {
     )
     private List<AssignmentEntity> assignment = new ArrayList<>();
 
+    public void addAssignment(Long assignerId, UserEntity userEntity) {
+        AssignmentEntity assignmentEntity = new AssignmentEntity(assignerId, userEntity, this);
+        this.assignment.add(assignmentEntity);
+        userEntity.getAssignment().add(assignmentEntity);
+    }
+
+    public void removeAssignment(UserEntity userEntity) {
+        for (AssignmentEntity e : assignment) {
+            if (e.getAssignmentPK().getUserId().equals(userEntity.getId())
+                    && e.getAssignmentPK().getTaskId().equals(this.id)) {
+                userEntity.getAssignment().remove(e);
+                assignment.remove(e);
+                e.setAssignerId(null);
+                e.setAssignmentPK(null);
+                e.setTask(null);
+                e.setUser(null);
+            }
+        }
+    }
+
     //
     // Override Methods
     //

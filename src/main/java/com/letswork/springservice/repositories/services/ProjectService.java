@@ -2,13 +2,14 @@ package com.letswork.springservice.repositories.services;
 
 import com.letswork.springservice.generalexception.NoContentException;
 import com.letswork.springservice.repositories.CRUD.ProjectCrud;
-import com.letswork.springservice.repositories.CRUD.UserCrud;
 import com.letswork.springservice.repositories.entities.ProjectEntity;
+import com.letswork.springservice.repositories.entities.RoleEntity;
 import com.letswork.springservice.repositories.entities.UserEntity;
 import com.letswork.springservice.task.model.TaskModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,8 +33,6 @@ public class ProjectService {
     }
 
     public void addUserToProject(Long userId, String role, Long projectId) throws NoContentException{
-//        Optional<UserEntity> userEntity = userCrud.findById(userId);
-//        if(!userEntity.isPresent()) throw new NoContentException("owner id not found");
         UserEntity user = userService.findUserById(userId);
         ProjectEntity project = findProjectById(projectId);
         project.addUser(user, role);
@@ -54,5 +53,14 @@ public class ProjectService {
             projectEntity.addUser(user, "owner");
             projectCrud.save(projectEntity);
         }
+    }
+
+    public List<UserEntity> findProjectMember(Long id){
+        ProjectEntity projectEntity = this.findProjectById(id);
+        List<UserEntity> userEntities = new ArrayList<>();
+        for (RoleEntity e : projectEntity.getOwnership()){
+            userEntities.add(e.getUser());
+        }
+        return  userEntities;
     }
 }

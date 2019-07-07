@@ -24,4 +24,9 @@ public class TaskController {
     public List<TaskModel> filterByProjectId(@RequestParam(name = "project_id") Long projectId){
         return TaskModel.convertFromTaskEntities(taskService.findAllByProjectId(projectId));
     }
+
+    @GetMapping(path = "/assign-user")
+    public void assignUser(@RequestParam(name = "task_id") Long taskId, @RequestParam(name = "assigner_id") Long assignerId, @RequestParam(name = "user_id") Long userId){
+        taskService.assignMember(taskId, assignerId, userId);
+    }
 }

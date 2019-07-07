@@ -12,4 +12,5 @@ public interface UserCrud extends CrudRepository<UserEntity, Long> {
 
     Optional<List<UserEntity>> findAllByFirstNameContainingOrLastNameContainingOrUserNameContaining(String keyWord1, String keyWord2, String keyword3);
 
+    boolean existsById(Long id);
 }

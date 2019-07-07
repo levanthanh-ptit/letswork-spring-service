@@ -41,4 +41,8 @@ public class UserService {
         }
         return userEntities.get();
     }
+
+    public boolean checkUserExists(Long id){
+        return userCrud.existsById(id);
+    }
 }

@@ -10,20 +10,23 @@ import java.util.Objects;
 @Entity(name = "assignment")
 @Table(name = "assignment")
 public class AssignmentEntity{
-    Long assignerId;
+    private Long assignerId;
 
     @EmbeddedId
-    AssignmentPK assignmentPK;
+    private AssignmentPK assignmentPK;
 
     @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "user_id")
-    UserEntity user;
+    private UserEntity user;
 
     @ManyToOne
     @MapsId("taskId")
     @JoinColumn(name = "task_id")
-    TaskEntity task;
+    private TaskEntity task;
+
+    public AssignmentEntity() {
+    }
 
     public AssignmentEntity(Long assignerId, UserEntity user, TaskEntity task) {
         this.assignerId = assignerId;
@@ -52,10 +55,13 @@ public class AssignmentEntity{
 class AssignmentPK  implements Serializable {
 
     @Column(name = "user_id")
-    Long userId;
+    private Long userId;
 
     @Column(name = "task_id")
-    Long taskId;
+    private Long taskId;
+
+    public AssignmentPK() {
+    }
 
     public AssignmentPK(Long userId, Long taskId) {
         this.userId = userId;
