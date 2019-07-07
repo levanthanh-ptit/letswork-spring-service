@@ -1,10 +1,11 @@
 package com.letswork.springservice.repositories.services;
 
-import com.letswork.springservice.genneralexception.NoContentException;
+import com.letswork.springservice.generalexception.NoContentException;
 import com.letswork.springservice.repositories.CRUD.UserCrud;
 import com.letswork.springservice.repositories.entities.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindException;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,13 +24,13 @@ public class UserService {
 
     public UserEntity findUserById(Long userId) throws NoContentException {
         Optional<UserEntity> userEntity = userCrud.findById(userId);
-        if (!userEntity.isPresent()) throw new NoContentException("user id not found");
+        if (!userEntity.isPresent()) throw new NoContentException("No user found");
         return userEntity.get();
     }
 
     public List<UserEntity> findAll() throws NoContentException {
         List<UserEntity> allUser = (List<UserEntity>) userCrud.findAll();
-        if (allUser.isEmpty()) throw new NoContentException("user id not found");
+        if (allUser.isEmpty()) throw new NoContentException("No user found");
         return allUser;
     }
 

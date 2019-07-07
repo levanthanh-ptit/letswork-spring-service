@@ -29,30 +29,6 @@ public class ProjectEntity {
         this.description = description;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     // Bidirectional mapping to UserEntity
     @NotFound(action = NotFoundAction.IGNORE)
     @OneToMany(
@@ -62,24 +38,21 @@ public class ProjectEntity {
             orphanRemoval = true,
             targetEntity = RoleEntity.class
     )
-    private List<RoleEntity> users = new ArrayList<>();
+    private List<RoleEntity> ownership = new ArrayList<>();
 
-    public List<RoleEntity> getUsers() {
-        return users;
-    }
-
-    public void addUser(UserEntity userEntity, String role) {
+    public ProjectEntity addUser(UserEntity userEntity, String role) {
         RoleEntity roleEntity = new RoleEntity(this, userEntity, role);
-        users.add(roleEntity);
-        userEntity.getProjects().add(roleEntity);
+        ownership.add(roleEntity);
+        userEntity.getOwnership().add(roleEntity);
+        return this;
     }
 
-    public void removeUsers(UserEntity userEntity) {
-        for (RoleEntity e : users) {
+    public void removeUser(UserEntity userEntity) {
+        for (RoleEntity e : ownership) {
             if (e.getProject().equals(this) && e.getUser().equals(userEntity)) {
-                users.remove(e);
-                e.getUser().getProjects().remove(e);
-                e.getProject().getUsers().remove(e);
+                ownership.remove(e);
+                e.getUser().getOwnership().remove(e);
+                e.getProject().getOwnership().remove(e);
                 e.setUser(null);
                 e.setProject(null);
             }
@@ -87,18 +60,21 @@ public class ProjectEntity {
     }
 
     // Bidirectional mapping to TaskEntity
-    @NotFound(action = NotFoundAction.IGNORE)
     @OneToMany(
             cascade = CascadeType.ALL,
-            mappedBy = "project",
-            fetch = FetchType.LAZY,
-            orphanRemoval = true,
-            targetEntity = TaskEntity.class
+            mappedBy = "project"
     )
     List<TaskEntity> tasks = new ArrayList<>();
 
-    public List<TaskEntity> getTasks() {
-        return tasks;
+    public ProjectEntity addTask(String title, String description) {
+        TaskEntity taskEntity = new TaskEntity(title, description);
+        taskEntity.setProject(this);
+        tasks.add(taskEntity);
+        return this;
+    }
+
+    public void removeTask(TaskEntity taskEntity) {
+
     }
 
     @Override

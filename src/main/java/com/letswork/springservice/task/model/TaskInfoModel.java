@@ -1,14 +1,11 @@
 package com.letswork.springservice.task.model;
 
-import com.letswork.springservice.project.model.ProjectInfoModel;
+import com.letswork.springservice.project.model.ProjectModel;
+import lombok.Data;
 
-public class TaskInfoModel {
+@Data
+public class TaskInfoModel extends TaskModel {
 
-        Long id;
+    ProjectModel project;
 
-        String title;
-
-        String Description;
-
-        ProjectInfoModel project;
 }

@@ -9,6 +9,7 @@ import java.util.Objects;
 
 @Data
 @Entity(name = "task")
+@Table(name = "task")
 public class TaskEntity {
 
     @Id
@@ -17,67 +18,57 @@ public class TaskEntity {
 
     String title;
 
-    String Description;
-
-    @ManyToOne(
-            cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
-            targetEntity = ProjectEntity.class
-    )
-    ProjectEntity project;
+    String description;
 
     public TaskEntity() {
     }
 
     public TaskEntity(String title, String description) {
         this.title = title;
-        Description = description;
+        this.description = description;
     }
 
-    public Long getId() {
-        return id;
-    }
+    @ManyToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            targetEntity = ProjectEntity.class
+    )
+    @JoinColumn(name = "project_id")
+    ProjectEntity project;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @OneToMany(
+            cascade = CascadeType.ALL,
+            mappedBy = "task",
+            fetch = FetchType.LAZY,
+            orphanRemoval = true,
+            targetEntity = AssignmentEntity.class
+    )
+    private List<AssignmentEntity> assignment = new ArrayList<>();
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return Description;
-    }
-
-    public void setDescription(String description) {
-        Description = description;
-    }
-
-    public ProjectEntity getProject() {
-        return project;
-    }
-
-    public void setProject(ProjectEntity project) {
-        this.project = project;
-    }
-
-
+    //
+    // Override Methods
+    //
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TaskEntity that = (TaskEntity) o;
         return Objects.equals(title, that.title) &&
-                Objects.equals(Description, that.Description);
+                Objects.equals(description, that.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, Description);
+        return Objects.hash(title, description);
+    }
+
+    @Override
+    public String toString() {
+        return "TaskEntity{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", project=" + project +
+                '}';
     }
 }

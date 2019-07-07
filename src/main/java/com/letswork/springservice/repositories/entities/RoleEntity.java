@@ -6,10 +6,12 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
-@Entity(name = "user_project")
+@Entity(name = "ownership")
 @Data
-@Table(name = "user_project")
+@Table(name = "ownership")
 public class RoleEntity {
+
+    private String role;
 
     @EmbeddedId
     private RolePK rolePK;
@@ -32,8 +34,6 @@ public class RoleEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    private String role;
-
     public RoleEntity() {
     }
 
@@ -42,38 +42,6 @@ public class RoleEntity {
         this.user = user;
         this.role = role;
         this.rolePK = new RolePK(user.getId(), project.getId());
-    }
-
-    public RolePK getRolePK() {
-        return rolePK;
-    }
-
-    public void setRolePK(RolePK rolePK) {
-        this.rolePK = rolePK;
-    }
-
-    public ProjectEntity getProject() {
-        return project;
-    }
-
-    public void setProject(ProjectEntity project) {
-        this.project = project;
-    }
-
-    public UserEntity getUser() {
-        return user;
-    }
-
-    public void setUser(UserEntity user) {
-        this.user = user;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     @Override

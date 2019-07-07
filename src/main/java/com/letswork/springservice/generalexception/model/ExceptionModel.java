@@ -1,4 +1,4 @@
-package com.letswork.springservice.genneralexception.model;
+package com.letswork.springservice.generalexception.model;
 
 public class ExceptionModel {
 
