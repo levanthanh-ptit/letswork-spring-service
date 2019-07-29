@@ -18,8 +18,7 @@ public class RoleEntity {
 
     @ManyToOne(
             targetEntity = ProjectEntity.class,
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL
+            fetch = FetchType.LAZY
     )
     @MapsId("projectId")
     @JoinColumn(name = "project_id")
@@ -27,8 +26,7 @@ public class RoleEntity {
 
     @ManyToOne(
             targetEntity = UserEntity.class,
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL
+            fetch = FetchType.LAZY
     )
     @MapsId("userId")
     @JoinColumn(name = "user_id")

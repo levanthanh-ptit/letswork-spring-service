@@ -14,6 +14,10 @@ public class TaskModel {
 
     String description;
 
+    Long estimateTime;
+
+    Long spendTime;
+
     public TaskModel() {
     }
 
@@ -21,9 +25,11 @@ public class TaskModel {
         this.id = entity.getId();
         this.title = entity.getTitle();
         this.description = entity.getDescription();
+        this.estimateTime = entity.getEstimateTime();
+        this.spendTime = entity.getSpendTime();
     }
 
-    public static List<TaskModel> convertFromTaskEntities(List<TaskEntity> taskEntity){
+    public static List<TaskModel> toTaskModelList(List<TaskEntity> taskEntity){
         ObjectUtil<TaskEntity, TaskModel> converter = TaskModel::new;
         return converter.convertToList(taskEntity);
     }

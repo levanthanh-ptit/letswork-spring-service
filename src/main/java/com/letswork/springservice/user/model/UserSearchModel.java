@@ -9,6 +9,8 @@ import java.util.List;
 @Data
 public class UserSearchModel {
 
+    private Long id;
+
     private String userName;
 
     private String fullName;
@@ -17,6 +19,7 @@ public class UserSearchModel {
     }
 
     public UserSearchModel(UserEntity entity) {
+        this.id = entity.getId();
         this.userName = entity.getUserName();
         this.fullName = entity.getFirstName() + " " + entity.getLastName();
     }

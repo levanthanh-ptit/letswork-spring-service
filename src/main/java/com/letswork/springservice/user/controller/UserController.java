@@ -1,6 +1,8 @@
 package com.letswork.springservice.user.controller;
 
+import com.letswork.springservice.project.model.ProjectModel;
 import com.letswork.springservice.repositories.entities.UserEntity;
+import com.letswork.springservice.repositories.services.RoleService;
 import com.letswork.springservice.repositories.services.UserService;
 import com.letswork.springservice.user.model.UserModel;
 import com.letswork.springservice.user.model.UserSearchModel;
@@ -17,6 +19,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private RoleService roleService;
 
     @GetMapping(path = "/all", produces = "application/json")
     private Iterable<UserModel> getAllUser() {
@@ -26,6 +30,11 @@ public class UserController {
     @GetMapping(path = "/info", produces = "application/json")
     private UserModel getUserInfoById(@RequestParam Long id) throws BindException {
         return new UserModel(userService.findUserById(id));
+    }
+
+    @GetMapping(path = "/{id}/projects")
+    private List<ProjectModel> getAllProjectsByUserIs(@PathVariable(name = "id") Long id) {
+        return ProjectModel.toProjectModelList(roleService.findAllProjectByUserId(id));
     }
 
     @GetMapping(path = "/filter-by-company")

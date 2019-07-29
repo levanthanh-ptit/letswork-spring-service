@@ -9,9 +9,15 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @RestControllerAdvice
 public class GeneralExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(value = {NoContentException.class})
+    @ExceptionHandler(value = {BadRequestException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    ExceptionModel handleBadRequest(NoContentException ex){
+    ExceptionModel handleBadRequest(BadRequestException ex){
+        return new ExceptionModel(ex.getMessage());
+    }
+
+    @ExceptionHandler(value = {NoContentException.class})
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    ExceptionModel handleNoContent(NoContentException ex){
         return new ExceptionModel(ex.getMessage());
     }
 }

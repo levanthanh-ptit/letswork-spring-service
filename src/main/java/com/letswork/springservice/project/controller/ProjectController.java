@@ -1,10 +1,14 @@
 package com.letswork.springservice.project.controller;
 
 import com.letswork.springservice.project.model.MemberModel;
-import com.letswork.springservice.project.model.ProjectInfoModel;
+import com.letswork.springservice.project.model.ProjectModel;
 import com.letswork.springservice.repositories.services.ProjectService;
-import com.letswork.springservice.task.model.TaskModel;
+import com.letswork.springservice.repositories.services.GroupService;
+import com.letswork.springservice.group.model.GroupInfoModel;
+import com.letswork.springservice.group.model.GroupModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,20 +19,18 @@ public class ProjectController {
 
     @Autowired
     ProjectService projectService;
+    @Autowired
+    GroupService groupService;
 
     @GetMapping(path = "/all", produces = "application/json")
-    private List<ProjectInfoModel> getAllProjects() {
-        return ProjectInfoModel.convertFromProjectEntities(projectService.findAll());
+    private List<ProjectModel> getAllProjects() {
+        return ProjectModel.toProjectModelList(projectService.findAll());
     }
 
     @GetMapping(path = "/{id}", produces = "application/json")
-    private ProjectInfoModel getProjectInfoById(@PathVariable(name = "id") Long projectId) {
-        return new ProjectInfoModel(projectService.findProjectById(projectId));
-    }
-
-    @GetMapping(path = "/seeding-data")
-    private void seedingProject(@RequestParam(name = "owner_id") Long id) {
-        projectService.seedingProject(id);
+    private ProjectModel getProjectInfoById(@PathVariable(name = "id") Long projectId) {
+        System.out.println("projectId: " + projectId);
+        return new ProjectModel(projectService.findProjectById(projectId));
     }
 
     @PostMapping(path = "/add-user")
@@ -38,16 +40,26 @@ public class ProjectController {
         projectService.addUserToProject(userId, role, projectId);
     }
 
-    @PostMapping(path = "/add-task", produces = "application/json")
-    private void addTaskToProject(@RequestBody TaskModel task,
-                                  @RequestParam(name = "project_id") Long projectId) {
-        System.out.println(projectId);
-        projectService.addTaskToProject( task, projectId);
+    @GetMapping(path = "/{id}/groups")
+    private List<GroupInfoModel> findTaskGroupByProjectId(@PathVariable(name = "id") Long projectId) {
+        return GroupInfoModel.toTaskGroupInfoModelList(groupService.findAllByProjectId(projectId));
     }
 
-    @GetMapping(path = "/{id}/ownership")
+    @PostMapping(path = "/{project_id}/add-group", produces = "application/json")
+    private ResponseEntity<GroupModel> addGroupToProject(@RequestBody GroupModel groupModel,
+                                             @PathVariable(name = "project_id") Long projectId) {
+        System.out.println("projectId: " + projectId);
+        GroupModel createdGroup = new GroupModel(projectService.addTaskGroupToProject(groupModel, projectId));
+        return new ResponseEntity<>( createdGroup, HttpStatus.CREATED);
+    }
+
+    @GetMapping(path = "/{id}/ownerships")
     private List<MemberModel> getMembers(@PathVariable(name = "id") Long projectId) {
-        return this.getProjectInfoById(projectId).getMembers();
+        return MemberModel.toMemberModelList(projectService.findProjectMember(projectId));
     }
 
+    @GetMapping(path = "/seeding-data")
+    private void seedingProject(@RequestParam(name = "owner_id") Long id) {
+        projectService.seedingProject(id);
+    }
 }

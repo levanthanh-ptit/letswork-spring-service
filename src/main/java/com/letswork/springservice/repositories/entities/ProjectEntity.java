@@ -38,39 +38,39 @@ public class ProjectEntity {
             orphanRemoval = true,
             targetEntity = RoleEntity.class
     )
-    private List<RoleEntity> ownership = new ArrayList<>();
+    private List<RoleEntity> ownerships = new ArrayList<>();
 
     public ProjectEntity addUser(UserEntity userEntity, String role) {
         RoleEntity roleEntity = new RoleEntity(this, userEntity, role);
-        ownership.add(roleEntity);
-        userEntity.getOwnership().add(roleEntity);
+        ownerships.add(roleEntity);
+        userEntity.getOwnerships().add(roleEntity);
         return this;
     }
 
     public void removeUser(UserEntity userEntity) {
-        for (RoleEntity e : ownership) {
+        for (RoleEntity e : ownerships) {
             if (e.getProject().equals(this) && e.getUser().equals(userEntity)) {
-                ownership.remove(e);
-                e.getUser().getOwnership().remove(e);
-                e.getProject().getOwnership().remove(e);
+                ownerships.remove(e);
+                e.getUser().getOwnerships().remove(e);
+                e.getProject().getOwnerships().remove(e);
                 e.setUser(null);
                 e.setProject(null);
             }
         }
     }
 
-    // Bidirectional mapping to TaskEntity
+    // Bidirectional mapping to GroupEntity
     @OneToMany(
             cascade = CascadeType.ALL,
             mappedBy = "project"
     )
-    List<TaskEntity> tasks = new ArrayList<>();
+    List<GroupEntity> taskGroups = new ArrayList<>();
 
-    public ProjectEntity addTask(String title, String description) {
-        TaskEntity taskEntity = new TaskEntity(title, description);
-        taskEntity.setProject(this);
-        tasks.add(taskEntity);
-        return this;
+    public GroupEntity addTaskGroup(String title) {
+        GroupEntity groupEntity = new GroupEntity(title);
+        groupEntity.setProject(this);
+        taskGroups.add(groupEntity);
+        return groupEntity;
     }
 
     public void removeTask(TaskEntity taskEntity) {

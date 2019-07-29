@@ -20,6 +20,12 @@ public class TaskEntity {
 
     String description;
 
+    @Column(columnDefinition = "BIGINT default 0")
+    Long estimateTime;
+
+    @Column(columnDefinition = "BIGINT default 0")
+    Long spendTime;
+
     public TaskEntity() {
     }
 
@@ -29,12 +35,11 @@ public class TaskEntity {
     }
 
     @ManyToOne(
-            cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
-            targetEntity = ProjectEntity.class
+            targetEntity = GroupEntity.class
     )
-    @JoinColumn(name = "project_id")
-    ProjectEntity project;
+    @JoinColumn(name = "group_id")
+    GroupEntity group;
 
     @OneToMany(
             cascade = CascadeType.ALL,
@@ -80,15 +85,5 @@ public class TaskEntity {
     @Override
     public int hashCode() {
         return Objects.hash(title, description);
-    }
-
-    @Override
-    public String toString() {
-        return "TaskEntity{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", project=" + project +
-                '}';
     }
 }

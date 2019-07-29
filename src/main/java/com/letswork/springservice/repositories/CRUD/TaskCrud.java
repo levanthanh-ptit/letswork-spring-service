@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface TaskCrud extends CrudRepository<TaskEntity, Long> {
-    public List<TaskEntity> findAllByProjectId(Long projectId);
+    public List<TaskEntity> findAllByGroup_Project_Id(Long projectId);
 }

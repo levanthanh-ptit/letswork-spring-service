@@ -61,6 +61,13 @@ public class UserEntity {
         this.country = country;
     }
 
+    public UserEntity(String userName, String password, String firstName, String lastName) {
+        this.userName = userName;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.hashPassword = password;
+    }
+
     // Bidirectional mapping to ProjectEntity
     @NotFound(action = NotFoundAction.IGNORE)
     @OneToMany(
@@ -70,7 +77,7 @@ public class UserEntity {
             orphanRemoval = true,
             targetEntity = RoleEntity.class
     )
-    private List<RoleEntity> ownership = new ArrayList<>();
+    private List<RoleEntity> ownerships = new ArrayList<>();
 
     @OneToMany(
             cascade = CascadeType.ALL,

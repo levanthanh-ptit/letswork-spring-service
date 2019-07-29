@@ -1,9 +1,9 @@
 package com.letswork.springservice.generalexception;
 
-public class NoContentException extends RuntimeException {
+public class BadRequestException extends RuntimeException {
     private String message;
 
-    public NoContentException(String message) {
+    public BadRequestException(String message) {
         this.message = message;
     }
 
