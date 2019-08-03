@@ -26,7 +26,7 @@ public class ProjectInfoModel extends ProjectModel {
             members.add(new MemberModel(e.getUser(), e.getRole()));
 
         }
-        for (GroupEntity e : projectEntity.getTaskGroups()) {
+        for (GroupEntity e : projectEntity.getGroups()) {
             taskGroup.add(new GroupModel(e));
         }
     }

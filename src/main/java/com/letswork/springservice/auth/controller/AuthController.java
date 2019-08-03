@@ -32,7 +32,7 @@ public class AuthController {
     public TokenModel login(@RequestBody LoginModel loginModel){
         UserEntity userEntity = userService.findUserByUsername(loginModel.getUserName());
         if(userEntity.getHashPassword().compareTo(loginModel.getPassword())==0) {
-            return new TokenModel("bearer LSWP 12s1daf254d6f5sd4f56sdf46sd5");
+            return new TokenModel("bearer LSWP 12s1daf254d6f5sd4f56sdf46sd5", userEntity.getId());
         }
         else throw new BadRequestException("login failed");
     }

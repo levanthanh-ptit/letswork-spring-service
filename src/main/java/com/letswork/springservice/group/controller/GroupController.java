@@ -1,6 +1,7 @@
 package com.letswork.springservice.group.controller;
 
 import com.letswork.springservice.group.model.GroupModel;
+import com.letswork.springservice.repositories.entities.TaskEntity;
 import com.letswork.springservice.repositories.services.GroupService;
 import com.letswork.springservice.task.model.TaskModel;
 import com.letswork.springservice.group.model.GroupInfoModel;
@@ -26,21 +27,27 @@ public class GroupController {
     private List<GroupInfoModel> findTaskGroup() {
         return GroupInfoModel.toTaskGroupInfoModelList(groupService.findAll());
     }
-    
+
     @PostMapping(path = "/{id}/add-task")
     private ResponseEntity<TaskModel> addTask(@RequestBody TaskModel taskModel,
-                                   @PathVariable(name = "id") Long taskGroupId) {
-        TaskModel createdTask = new TaskModel(groupService.addTask(taskModel, taskGroupId));
-        return new ResponseEntity<>( createdTask, HttpStatus.CREATED);
+                                              @PathVariable(name = "id") Long taskGroupId) {
+        TaskEntity createdTaskEntity =
+                groupService.addTask(
+                        taskModel.getTitle(),
+                        taskModel.getDescription(),
+                        taskGroupId
+                );
+        TaskModel createdTask = new TaskModel(createdTaskEntity);
+        return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
     }
 
     @PatchMapping
-    private void updateTask(@RequestBody GroupModel groupModel){
+    private void updateTask(@RequestBody GroupModel groupModel) {
         groupService.updateGroup(groupModel.getId(), groupModel.getTitle());
     }
 
     @DeleteMapping(path = "/{id}")
-    public void deleteGroup(@PathVariable(name = "id") Long id){
+    public void deleteGroup(@PathVariable(name = "id") Long id) {
         groupService.deleteGroup(id);
     }
 }

@@ -61,6 +61,7 @@ public class RoleEntity {
 // Composite primary key class
 
 @Embeddable
+@Data
 class RolePK implements Serializable {
 
     @Column(name = "user_id")
@@ -77,17 +78,17 @@ class RolePK implements Serializable {
         this.projectId = projectId;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RolePK that = (RolePK) o;
-        return userId.equals(that.userId) &&
-                projectId.equals(that.projectId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, projectId);
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        RolePK that = (RolePK) o;
+//        return userId.equals(that.userId) &&
+//                projectId.equals(that.projectId);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(userId, projectId);
+//    }
 }

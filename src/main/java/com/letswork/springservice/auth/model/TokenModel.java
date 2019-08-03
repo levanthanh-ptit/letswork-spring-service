@@ -7,5 +7,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class TokenModel {
     String token;
-
+    Long id;
 }

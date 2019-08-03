@@ -64,17 +64,17 @@ public class ProjectEntity {
             cascade = CascadeType.ALL,
             mappedBy = "project"
     )
-    List<GroupEntity> taskGroups = new ArrayList<>();
+    List<GroupEntity> groups = new ArrayList<>();
 
-    public GroupEntity addTaskGroup(String title) {
+    public GroupEntity addGroup(String title) {
         GroupEntity groupEntity = new GroupEntity(title);
         groupEntity.setProject(this);
-        taskGroups.add(groupEntity);
+        groups.add(groupEntity);
         return groupEntity;
     }
 
-    public void removeTask(TaskEntity taskEntity) {
-
+    public void removeGroup(GroupEntity groupEntity) {
+        groups.remove(groupEntity);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.letswork.springservice.repositories.services.GroupService;
 import com.letswork.springservice.repositories.services.TaskService;
 import com.letswork.springservice.task.model.AssignmentModel;
 import com.letswork.springservice.task.model.TaskModel;
+import com.letswork.springservice.user.model.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,11 +34,15 @@ public class TaskController {
     public List<TaskModel> filterByProjectId(@RequestParam(name = "project_id") Long projectId) {
         return TaskModel.toTaskModelList(taskService.findAllByProjectId(projectId));
     }
+    @GetMapping(path = "/{id}/assignment")
+    public List<AssignmentModel> getTaskAssignment(@PathVariable(name = "id") Long id){
+        return AssignmentModel.toAssignmentModelList(taskService.getAssignment(id));
+    }
 
-    @PostMapping(path = "/assign-user")
-    public void assignUser(@RequestBody AssignmentModel body) {
+    @PostMapping(path = "/{id}/assign-user")
+    public void assignUser(@PathVariable(name = "id") Long id,@RequestBody AssignmentModel body) {
         System.out.println(body.toString());
-        taskService.assignMember(body.getTaskId(), body.getAssignerId(), body.getUserId());
+        taskService.assignMember(id, body.getAssignerId(), body.getUserId());
     }
 
     @PostMapping(path = "/change-group")

@@ -1,6 +1,7 @@
 package com.letswork.springservice.project.controller;
 
 import com.letswork.springservice.project.model.MemberModel;
+import com.letswork.springservice.project.model.ProjectCreationModel;
 import com.letswork.springservice.project.model.ProjectModel;
 import com.letswork.springservice.repositories.services.ProjectService;
 import com.letswork.springservice.repositories.services.GroupService;
@@ -22,6 +23,11 @@ public class ProjectController {
     @Autowired
     GroupService groupService;
 
+    @PostMapping
+    private ProjectModel createProject(@RequestBody ProjectCreationModel body){
+        return new ProjectModel(projectService.createProject(body.getUserId(),body.getName()));
+    }
+
     @GetMapping(path = "/all", produces = "application/json")
     private List<ProjectModel> getAllProjects() {
         return ProjectModel.toProjectModelList(projectService.findAll());
@@ -33,10 +39,10 @@ public class ProjectController {
         return new ProjectModel(projectService.findProjectById(projectId));
     }
 
-    @PostMapping(path = "/add-user")
+    @PostMapping(path = "/{project_id}/add-user")
     private void addUserToProject(@RequestParam(name = "user_id") Long userId,
                                   @RequestParam(name = "role") String role,
-                                  @RequestParam(name = "project_id") Long projectId) {
+                                  @PathVariable(name = "project_id") Long projectId) {
         projectService.addUserToProject(userId, role, projectId);
     }
 
@@ -49,7 +55,7 @@ public class ProjectController {
     private ResponseEntity<GroupModel> addGroupToProject(@RequestBody GroupModel groupModel,
                                              @PathVariable(name = "project_id") Long projectId) {
         System.out.println("projectId: " + projectId);
-        GroupModel createdGroup = new GroupModel(projectService.addTaskGroupToProject(groupModel, projectId));
+        GroupModel createdGroup = new GroupModel(projectService.addTaskGroupToProject(groupModel.getTitle(), projectId));
         return new ResponseEntity<>( createdGroup, HttpStatus.CREATED);
     }
 

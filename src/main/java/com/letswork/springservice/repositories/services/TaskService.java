@@ -3,10 +3,7 @@ package com.letswork.springservice.repositories.services;
 import com.letswork.springservice.generalexception.BadRequestException;
 import com.letswork.springservice.generalexception.NoContentException;
 import com.letswork.springservice.repositories.CRUD.TaskCrud;
-import com.letswork.springservice.repositories.entities.GroupEntity;
-import com.letswork.springservice.repositories.entities.RoleEntity;
-import com.letswork.springservice.repositories.entities.TaskEntity;
-import com.letswork.springservice.repositories.entities.UserEntity;
+import com.letswork.springservice.repositories.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +56,11 @@ public class TaskService {
         if (!member.contains(user)) throw new BadRequestException("user is not member");
         taskEntity.addAssignment(assignerId, user);
         taskCrud.save(taskEntity);
+    }
+
+    public List<AssignmentEntity> getAssignment(Long id){
+        TaskEntity task= findTaskById(id);
+        return task.getAssignment();
     }
 
     public void changeGroup(Long id, Long targetGroupId) throws BadRequestException {

@@ -6,7 +6,6 @@ import com.letswork.springservice.repositories.entities.GroupEntity;
 import com.letswork.springservice.repositories.entities.ProjectEntity;
 import com.letswork.springservice.repositories.entities.RoleEntity;
 import com.letswork.springservice.repositories.entities.UserEntity;
-import com.letswork.springservice.group.model.GroupModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +18,16 @@ public class ProjectService {
     ProjectCrud projectCrud;
     @Autowired
     UserService userService;
+    @Autowired
+    GroupService groupService;
+
+    public ProjectEntity createProject(Long userId, String name){
+        UserEntity userEntity = userService.findUserById(userId);
+        ProjectEntity projectEntity = new ProjectEntity();
+        projectEntity.setName(name);
+        projectEntity.addUser(userEntity, "owner");
+        return projectCrud.save(projectEntity);
+    }
 
     public ProjectEntity findProjectById(Long projectId) throws BadRequestException {
         Optional<ProjectEntity> projectEntity = projectCrud.findById(projectId);
@@ -34,17 +43,19 @@ public class ProjectService {
 
     public void addUserToProject(Long userId, String role, Long projectId) throws BadRequestException {
         UserEntity user = userService.findUserById(userId);
+        System.out.println(user.toString());
         ProjectEntity project = findProjectById(projectId);
+        System.out.println(project.toString());
         project.addUser(user, role);
         projectCrud.save(project);
     }
 
     public GroupEntity addTaskGroupToProject(String title, Long projectId) throws BadRequestException{
-        if(title == null ) throw new BadRequestException("title is null");
+        if(title == null ) throw new BadRequestException("name is null");
         ProjectEntity project = findProjectById(projectId);
-        GroupEntity groupEntity = project.addTaskGroup(title);
-        projectCrud.save(project);
-        return groupEntity;
+        GroupEntity groupEntity = new GroupEntity(title);
+        groupEntity.setProject(project);
+        return groupService.groupCrud.save(groupEntity);
     }
 
     public void seedingProject(Long id) throws BadRequestException {

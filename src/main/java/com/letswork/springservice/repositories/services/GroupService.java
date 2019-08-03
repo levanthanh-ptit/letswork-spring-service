@@ -4,7 +4,6 @@ import com.letswork.springservice.generalexception.BadRequestException;
 import com.letswork.springservice.repositories.CRUD.GroupCrud;
 import com.letswork.springservice.repositories.entities.GroupEntity;
 import com.letswork.springservice.repositories.entities.TaskEntity;
-import com.letswork.springservice.task.model.TaskModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,22 +36,22 @@ public class GroupService {
         return allGroup;
     }
 
-    public TaskEntity addTask(TaskModel taskModel, Long taskGroupId){
+    public TaskEntity addTask(String title, String description, Long taskGroupId) {
         GroupEntity groupEntity = this.findGroupById(taskGroupId);
-        TaskEntity taskEntity = groupEntity.addTask(taskModel.getTitle(), taskModel.getDescription());
-        groupCrud.save(groupEntity);
-        return taskEntity;
+        TaskEntity taskEntity = new TaskEntity(title, description);
+        taskEntity.setGroup(groupEntity);
+        return taskService.taskCrud.save(taskEntity);
     }
 
-    public void updateGroup(Long id, String title){
+    public void updateGroup(Long id, String title) {
         GroupEntity group = findGroupById(id);
-        if(title != null && group.getTitle().compareTo(title) != 0){
+        if (title != null && group.getTitle().compareTo(title) != 0) {
             group.setTitle(title);
             groupCrud.save(group);
         }
     }
 
-    public void deleteGroup(Long id){
+    public void deleteGroup(Long id) {
         GroupEntity groupEntity = findGroupById(id);
         groupCrud.delete(groupEntity);
     }
