@@ -35,8 +35,18 @@ public class ProjectController {
 
     @GetMapping(path = "/{id}", produces = "application/json")
     private ProjectModel getProjectInfoById(@PathVariable(name = "id") Long projectId) {
-        System.out.println("projectId: " + projectId);
+
         return new ProjectModel(projectService.findProjectById(projectId));
+    }
+
+    @PatchMapping(path = "/{id}")
+    private void updateProject(@PathVariable Long id, @RequestBody ProjectModel project){
+        projectService.updateProject(id, project.getName(), project.getDescription());
+    }
+
+    @DeleteMapping(path = "/{id}")
+    private void deleteProject(@PathVariable Long id){
+        projectService.deleteProject(id);
     }
 
     @PostMapping(path = "/{project_id}/add-user")

@@ -28,7 +28,6 @@ public class UserEntity {
 
     private String lastName;
 
-    @NaturalId
     @Column(unique = true)
     private String email;
 
@@ -61,8 +60,9 @@ public class UserEntity {
         this.country = country;
     }
 
-    public UserEntity(String userName, String password, String firstName, String lastName) {
+    public UserEntity(String userName, String email, String password, String firstName, String lastName) {
         this.userName = userName;
+        this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.hashPassword = password;

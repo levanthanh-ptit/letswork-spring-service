@@ -40,11 +40,9 @@ public class ProjectEntity {
     )
     private List<RoleEntity> ownerships = new ArrayList<>();
 
-    public ProjectEntity addUser(UserEntity userEntity, String role) {
+    public void addUser(UserEntity userEntity, String role) {
         RoleEntity roleEntity = new RoleEntity(this, userEntity, role);
         ownerships.add(roleEntity);
-        userEntity.getOwnerships().add(roleEntity);
-        return this;
     }
 
     public void removeUser(UserEntity userEntity) {

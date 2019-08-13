@@ -58,8 +58,8 @@ public class TaskService {
         taskCrud.save(taskEntity);
     }
 
-    public List<AssignmentEntity> getAssignment(Long id){
-        TaskEntity task= findTaskById(id);
+    public List<AssignmentEntity> getAssignment(Long id) {
+        TaskEntity task = findTaskById(id);
         return task.getAssignment();
     }
 
@@ -72,27 +72,22 @@ public class TaskService {
 
     public void updateTask(Long id, String title, String description, Long estimateTime, Long spendTime) {
         TaskEntity task = findTaskById(id);
-        boolean isModify = false;
-        if (title != null && task.getTitle().compareTo(title) != 0) {
+        if (title != null) {
             task.setTitle(title);
-            isModify = true;
         }
-        if (description != null && task.getDescription().compareTo(description) != 0) {
+        if (description != null) {
             task.setDescription(description);
-            isModify = true;
         }
-        if (estimateTime != null && task.getEstimateTime().compareTo(estimateTime) != 0) {
+        if (estimateTime != null) {
             task.setEstimateTime(estimateTime);
-            isModify = true;
         }
-        if (spendTime != null && task.getSpendTime().compareTo(spendTime) != 0) {
+        if (spendTime != null) {
             task.setSpendTime(spendTime);
-            isModify = true;
         }
-        if (isModify) taskCrud.save(task);
+        taskCrud.save(task);
     }
 
-    public void deleteTask(Long id){
+    public void deleteTask(Long id) {
         TaskEntity taskEntity = findTaskById(id);
         taskCrud.delete(taskEntity);
     }

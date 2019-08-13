@@ -53,7 +53,6 @@ public class TaskEntity {
     public void addAssignment(Long assignerId, UserEntity userEntity) {
         AssignmentEntity assignmentEntity = new AssignmentEntity(assignerId, userEntity, this);
         this.assignment.add(assignmentEntity);
-        userEntity.getAssignment().add(assignmentEntity);
     }
 
     public void removeAssignment(UserEntity userEntity) {

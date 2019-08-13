@@ -27,9 +27,21 @@ public class UserController {
         return UserModel.covertFromUserEntities(userService.findAll());
     }
 
-    @GetMapping(path = "/info", produces = "application/json")
-    private UserModel getUserInfoById(@RequestParam Long id) throws BindException {
+    @GetMapping(path = "/{id}", produces = "application/json")
+    private UserModel getUserInfoById(@PathVariable(name = "id") Long id) throws BindException {
         return new UserModel(userService.findUserById(id));
+    }
+
+    @PatchMapping(path = "/{id}", produces = "application/json")
+    private void updateUser(@PathVariable(name = "id") Long id, @RequestBody UserModel user) {
+        userService.updateUser(
+                id,
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getCompany(),
+                user.getBio(),
+                user.getCountry());
     }
 
     @GetMapping(path = "/{id}/projects")
@@ -38,7 +50,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/filter-by-company")
-    private List<UserModel> getUserInfoByCompany(@RequestParam String company){
+    private List<UserModel> getUserInfoByCompany(@RequestParam String company) {
         return UserModel.covertFromUserEntities(userService.findAllByCompany(company));
     }
 
@@ -60,7 +72,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/search")
-    private List<UserSearchModel> searchUsersByName(@RequestParam(name = "key_word") String keyWord){
+    private List<UserSearchModel> searchUsersByName(@RequestParam(name = "key_word") String keyWord) {
         return UserSearchModel.covertFromUserEntity(userService.searchUser(keyWord));
     }
 }

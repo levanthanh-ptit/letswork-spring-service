@@ -41,11 +41,25 @@ public class ProjectService {
         return allProject;
     }
 
+    public void deleteProject(Long id) {
+        ProjectEntity project = findProjectById(id);
+        projectCrud.delete(project);
+    }
+
+    public void updateProject(Long id, String name, String description){
+        ProjectEntity project = findProjectById(id);
+        project.setName(name);
+        project.setDescription(description);
+        projectCrud.save(project);
+    }
+
     public void addUserToProject(Long userId, String role, Long projectId) throws BadRequestException {
         UserEntity user = userService.findUserById(userId);
-        System.out.println(user.toString());
         ProjectEntity project = findProjectById(projectId);
-        System.out.println(project.toString());
+        boolean isMember = false;
+        for (RoleEntity e: project.getOwnerships()) {
+            if(e.getUser().equals(user)) throw new BadRequestException("User already member");
+        }
         project.addUser(user, role);
         projectCrud.save(project);
     }

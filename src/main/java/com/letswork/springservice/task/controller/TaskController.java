@@ -51,10 +51,11 @@ public class TaskController {
         taskService.changeGroup(id, targetGroupId);
     }
 
-    @PatchMapping
-    public void updateTask(@RequestBody TaskModel taskModel) {
+    @PatchMapping(path = "/{id}")
+    public void updateTask(@PathVariable Long id, @RequestBody TaskModel taskModel) {
+        System.out.println(taskModel.toString());
         taskService.updateTask(
-                taskModel.getId(),
+                id,
                 taskModel.getTitle(),
                 taskModel.getDescription(),
                 taskModel.getEstimateTime(),
