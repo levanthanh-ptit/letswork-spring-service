@@ -1,21 +1,24 @@
 package com.letswork.springservice.auth.controller;
 
+import com.letswork.springservice.auth.JwtTokenProvider;
 import com.letswork.springservice.auth.model.LoginModel;
 import com.letswork.springservice.auth.model.TokenModel;
+import com.letswork.springservice.generalexception.AuthenticationException;
 import com.letswork.springservice.generalexception.BadRequestException;
 import com.letswork.springservice.repositories.entities.UserEntity;
 import com.letswork.springservice.repositories.services.UserService;
 import com.letswork.springservice.auth.model.SignUpModel;
-import com.letswork.springservice.user.model.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping(path = "/auth")
 public class AuthController {
+    @Autowired
+    JwtTokenProvider tokenProvider;
+
     @Autowired
     UserService userService;
 
@@ -28,14 +31,15 @@ public class AuthController {
                 signUpModel.getFirstName(),
                 signUpModel.getLastName()
         );
-        return new TokenModel("bearer 12s1daf254d6f5sd4f56sdf46sd5", user.getId());
+
+        return new TokenModel(tokenProvider.generateToken(user), user.getId());
     }
 
     @PostMapping(path = "/login")
     public TokenModel login(@RequestBody LoginModel loginModel){
-        UserEntity userEntity = userService.findUserByUsername(loginModel.getUserName());
-        if(userEntity.getHashPassword().compareTo(loginModel.getPassword())==0) {
-            return new TokenModel("bearer 12s1daf254d6f5sd4f56sdf46sd5", userEntity.getId());
+        UserEntity user = userService.findUserByUsername(loginModel.getUserName());
+        if(user.getHashPassword().compareTo(loginModel.getPassword())==0) {
+            return new TokenModel(tokenProvider.generateToken(user), user.getId());
         }
         else throw new BadRequestException("login failed");
     }

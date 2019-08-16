@@ -1,6 +1,7 @@
 package com.letswork.springservice.repositories.services;
 
 import com.letswork.springservice.generalexception.BadRequestException;
+import com.letswork.springservice.generalexception.NoContentException;
 import com.letswork.springservice.repositories.CRUD.GroupCrud;
 import com.letswork.springservice.repositories.entities.GroupEntity;
 import com.letswork.springservice.repositories.entities.TaskEntity;
@@ -30,9 +31,9 @@ public class GroupService {
         return allTask;
     }
 
-    public List<GroupEntity> findAllByProjectId(Long id) throws BadRequestException {
+    public List<GroupEntity> findAllByProjectId(Long id) throws NoContentException {
         List<GroupEntity> allGroup = groupCrud.findAllByProjectId(id);
-        if (allGroup.isEmpty()) throw new BadRequestException("group id not found");
+        if (allGroup.isEmpty()) throw new NoContentException("doesn't have any group");
         return allGroup;
     }
 

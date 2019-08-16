@@ -1,6 +1,10 @@
 package com.letswork.springservice.group.controller;
 
+import com.letswork.springservice.auth.JwtTokenProvider;
+import com.letswork.springservice.generalexception.AuthenticationException;
 import com.letswork.springservice.group.model.GroupModel;
+import com.letswork.springservice.repositories.entities.GroupEntity;
+import com.letswork.springservice.repositories.entities.RoleEntity;
 import com.letswork.springservice.repositories.entities.TaskEntity;
 import com.letswork.springservice.repositories.services.GroupService;
 import com.letswork.springservice.task.model.TaskModel;
@@ -10,11 +14,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/group")
 public class GroupController {
+    @Autowired
+    JwtTokenProvider tokenProvider;
+
     @Autowired
     GroupService groupService;
 
@@ -47,7 +55,15 @@ public class GroupController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public void deleteGroup(@PathVariable(name = "id") Long id) {
-        groupService.deleteGroup(id);
+    public void deleteGroup(
+            @PathVariable(name = "id") Long id,
+            @RequestHeader(name = "Authorization") String auth)
+            throws AuthenticationException {
+        Long userId = tokenProvider.getUserIdFromAuthenticationString(auth);
+        GroupEntity group = groupService.findGroupById(id);
+        boolean isOwner = group.getProject().getRoleByMemberId(userId).compareTo("owner") == 0;
+        if (isOwner)
+            groupService.deleteGroup(id);
+        else throw new AuthenticationException("You have no permission to delete this group.");
     }
 }

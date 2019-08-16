@@ -24,9 +24,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.session:spring-session-core'
-//    compile("org.springframework.boot:spring-boot-starter-security")
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+
 }

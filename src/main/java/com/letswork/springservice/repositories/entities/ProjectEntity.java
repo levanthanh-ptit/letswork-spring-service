@@ -56,6 +56,13 @@ public class ProjectEntity {
             }
         }
     }
+    public String getRoleByMemberId(Long id){
+        String role = "";
+        for (RoleEntity e: ownerships) {
+            if(e.getUser().getId().compareTo(id)==0) role = e.getRole();
+        }
+        return  role;
+    }
 
     // Bidirectional mapping to GroupEntity
     @OneToMany(
