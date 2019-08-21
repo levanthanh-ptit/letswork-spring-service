@@ -47,12 +47,20 @@ public class ProjectEntity {
 
     public void removeUser(UserEntity userEntity) {
         for (RoleEntity e : ownerships) {
-            if (e.getProject().equals(this) && e.getUser().equals(userEntity)) {
+            if (e.getUser().equals(userEntity)) {
                 ownerships.remove(e);
                 e.getUser().getOwnerships().remove(e);
-                e.getProject().getOwnerships().remove(e);
                 e.setUser(null);
                 e.setProject(null);
+                break;
+            }
+        }
+    }
+    public void removeUserById(Long userId) {
+        for (RoleEntity e : ownerships) {
+            if (e.getUser().getId().compareTo(userId) == 0) {
+                ownerships.remove(e);
+               break;
             }
         }
     }

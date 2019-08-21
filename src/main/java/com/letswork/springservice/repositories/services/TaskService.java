@@ -42,9 +42,7 @@ public class TaskService {
     }
 
     public void assignMember(Long taskId, Long assignerId, Long userId) throws BadRequestException {
-        Optional<TaskEntity> task = taskCrud.findById(taskId);
-        if (!task.isPresent()) throw new BadRequestException("task id not found");
-        TaskEntity taskEntity = task.get();
+        TaskEntity taskEntity = findTaskById(taskId);
         UserEntity assigner = userService.findUserById(assignerId);
         UserEntity user = userService.findUserById(userId);
         List<RoleEntity> roleEntities = projectService.findProjectMember(taskEntity.getGroup().getProject().getId());
@@ -55,6 +53,12 @@ public class TaskService {
         if (!member.contains(assigner)) throw new BadRequestException("assigner is not member");
         if (!member.contains(user)) throw new BadRequestException("user is not member");
         taskEntity.addAssignment(assignerId, user);
+        taskCrud.save(taskEntity);
+    }
+
+    public void removeAssignment(Long taskId, Long userId) {
+        TaskEntity taskEntity = findTaskById(taskId);
+        taskEntity.removeAssignmentById(userId);
         taskCrud.save(taskEntity);
     }
 

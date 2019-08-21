@@ -63,7 +63,11 @@ public class ProjectService {
         project.addUser(user, role);
         projectCrud.save(project);
     }
-
+    public void removeUserFromProject(Long userId, Long projectId) throws BadRequestException {
+        ProjectEntity project = findProjectById(projectId);
+        project.removeUserById(userId);
+        projectCrud.save(project);
+    }
     public GroupEntity addTaskGroupToProject(String title, Long projectId) throws BadRequestException{
         if(title == null ) throw new BadRequestException("name is null");
         ProjectEntity project = findProjectById(projectId);

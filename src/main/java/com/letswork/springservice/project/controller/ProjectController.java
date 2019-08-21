@@ -28,8 +28,11 @@ public class ProjectController {
     GroupService groupService;
 
     @PostMapping
-    private ProjectModel createProject(@RequestBody ProjectCreationModel body) {
-        return new ProjectModel(projectService.createProject(body.getUserId(), body.getName()));
+    private ProjectModel createProject(
+            @RequestBody ProjectCreationModel body,
+            @RequestHeader(name = "Authorization") String auth) {
+        Long userId = tokenProvider.getUserIdFromAuthenticationString(auth);
+        return new ProjectModel(projectService.createProject(userId, body.getName()));
     }
 
     @GetMapping(path = "/all", produces = "application/json")
@@ -39,7 +42,6 @@ public class ProjectController {
 
     @GetMapping(path = "/{id}", produces = "application/json")
     private ProjectModel getProjectInfoById(@PathVariable(name = "id") Long projectId) {
-
         return new ProjectModel(projectService.findProjectById(projectId));
     }
 
@@ -49,7 +51,13 @@ public class ProjectController {
     }
 
     @DeleteMapping(path = "/{id}")
-    private void deleteProject(@PathVariable Long id) {
+    private void deleteProject(
+            @PathVariable Long id,
+            @RequestHeader(name = "Authorization") String auth) {
+        ProjectEntity projectEntity = projectService.findProjectById(id);
+        Long userId = tokenProvider.getUserIdFromAuthenticationString(auth);
+        boolean isOwner = projectEntity.getRoleByMemberId(userId).compareTo("owner") == 0;
+        if(!isOwner) throw new AuthenticationException("You have no permission to delete this project.");
         projectService.deleteProject(id);
     }
 
@@ -59,7 +67,11 @@ public class ProjectController {
                                   @PathVariable(name = "project_id") Long projectId) {
         projectService.addUserToProject(userId, role, projectId);
     }
-
+    @DeleteMapping(path = "/{project_id}/remove-user")
+    private void addUserToProject(@RequestParam(name = "user_id") Long userId,
+                                  @PathVariable(name = "project_id") Long projectId) {
+        projectService.removeUserFromProject(userId, projectId);
+    }
     @GetMapping(path = "/{id}/groups")
     private List<GroupInfoModel> findTaskGroupByProjectId(@PathVariable(name = "id") Long projectId) {
         return GroupInfoModel.toTaskGroupInfoModelList(groupService.findAllByProjectId(projectId));
@@ -68,14 +80,14 @@ public class ProjectController {
     @PostMapping(path = "/{project_id}/add-group", produces = "application/json")
     private ResponseEntity<GroupModel> addGroupToProject(
             @RequestBody GroupModel groupModel,
-            @PathVariable(name = "project_id") Long projectId,
+            @PathVariable(name = "project_id") Long id,
             @RequestHeader(name = "Authorization") String auth)
             throws AuthenticationException {
-        ProjectEntity projectEntity = projectService.findProjectById(projectId);
+        ProjectEntity projectEntity = projectService.findProjectById(id);
         Long userId = tokenProvider.getUserIdFromAuthenticationString(auth);
         boolean isOwner = projectEntity.getRoleByMemberId(userId).compareTo("owner") == 0;
         if(!isOwner) throw new AuthenticationException("You have no permission to add a group.");
-        GroupModel createdGroup = new GroupModel(projectService.addTaskGroupToProject(groupModel.getTitle(), projectId));
+        GroupModel createdGroup = new GroupModel(projectService.addTaskGroupToProject(groupModel.getTitle(), id));
         return new ResponseEntity<>(createdGroup, HttpStatus.CREATED);
     }
 

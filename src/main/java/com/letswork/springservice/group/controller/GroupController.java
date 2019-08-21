@@ -4,7 +4,6 @@ import com.letswork.springservice.auth.JwtTokenProvider;
 import com.letswork.springservice.generalexception.AuthenticationException;
 import com.letswork.springservice.group.model.GroupModel;
 import com.letswork.springservice.repositories.entities.GroupEntity;
-import com.letswork.springservice.repositories.entities.RoleEntity;
 import com.letswork.springservice.repositories.entities.TaskEntity;
 import com.letswork.springservice.repositories.services.GroupService;
 import com.letswork.springservice.task.model.TaskModel;
@@ -14,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

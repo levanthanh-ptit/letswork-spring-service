@@ -65,10 +65,17 @@ public class TaskEntity {
                 e.setAssignmentPK(null);
                 e.setTask(null);
                 e.setUser(null);
+                break;
             }
         }
     }
-
+    public void removeAssignmentById(Long id) {
+        for (AssignmentEntity e : assignment) {
+            if (e.getUser().getId().compareTo(id) == 0)
+                assignment.remove(e);
+            break;
+        }
+    }
     //
     // Override Methods
     //

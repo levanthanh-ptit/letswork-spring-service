@@ -34,15 +34,21 @@ public class TaskController {
     public List<TaskModel> filterByProjectId(@RequestParam(name = "project_id") Long projectId) {
         return TaskModel.toTaskModelList(taskService.findAllByProjectId(projectId));
     }
+
     @GetMapping(path = "/{id}/assignment")
-    public List<AssignmentModel> getTaskAssignment(@PathVariable(name = "id") Long id){
+    public List<AssignmentModel> getTaskAssignment(@PathVariable(name = "id") Long id) {
         return AssignmentModel.toAssignmentModelList(taskService.getAssignment(id));
     }
 
     @PostMapping(path = "/{id}/assign-user")
-    public void assignUser(@PathVariable(name = "id") Long id,@RequestBody AssignmentModel body) {
+    public void assignUser(@PathVariable(name = "id") Long id, @RequestBody AssignmentModel body) {
         System.out.println(body.toString());
         taskService.assignMember(id, body.getAssignerId(), body.getUserId());
+    }
+
+    @DeleteMapping(path = "/{id}/remove-user")
+    public void assignUser(@PathVariable(name = "id") Long id, @RequestParam(name = "user_id") Long userId) {
+        taskService.removeAssignment(id, userId);
     }
 
     @PostMapping(path = "/change-group")
@@ -62,8 +68,9 @@ public class TaskController {
                 taskModel.getSpendTime()
         );
     }
+
     @DeleteMapping(path = "/{id}")
-    public void deleteTask(@PathVariable(name = "id") Long id){
+    public void deleteTask(@PathVariable(name = "id") Long id) {
         taskService.deleteTask(id);
     }
 }
