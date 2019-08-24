@@ -10,6 +10,8 @@ import com.letswork.springservice.repositories.services.ProjectService;
 import com.letswork.springservice.repositories.services.GroupService;
 import com.letswork.springservice.group.model.GroupInfoModel;
 import com.letswork.springservice.group.model.GroupModel;
+import com.letswork.springservice.repositories.services.TaskService;
+import com.letswork.springservice.task.model.TaskModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,8 @@ public class ProjectController {
     ProjectService projectService;
     @Autowired
     GroupService groupService;
+    @Autowired
+    TaskService taskService;
 
     @PostMapping
     private ProjectModel createProject(
@@ -89,6 +93,10 @@ public class ProjectController {
         if(!isOwner) throw new AuthenticationException("You have no permission to add a group.");
         GroupModel createdGroup = new GroupModel(projectService.addTaskGroupToProject(groupModel.getTitle(), id));
         return new ResponseEntity<>(createdGroup, HttpStatus.CREATED);
+    }
+    @GetMapping(path = "/{id}/all_done_tasks")
+    private List<TaskModel> gettAllDoneTasks(@PathVariable(name = "id") Long projectId){
+        return TaskModel.toTaskModelList(taskService.findAllDoneTask(projectId));
     }
 
     @GetMapping(path = "/{id}/ownerships")

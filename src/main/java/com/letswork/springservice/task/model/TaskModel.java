@@ -4,6 +4,7 @@ import com.letswork.springservice.repositories.entities.TaskEntity;
 import com.letswork.springservice.utils.ObjectUtil;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -18,6 +19,7 @@ public class TaskModel {
 
     Long spendTime;
 
+    Date finishDate;
     public TaskModel() {
     }
 
@@ -27,6 +29,7 @@ public class TaskModel {
         this.description = entity.getDescription();
         this.estimateTime = entity.getEstimateTime();
         this.spendTime = entity.getSpendTime();
+        this.finishDate = entity.getFinishDate();
     }
 
     public static List<TaskModel> toTaskModelList(List<TaskEntity> taskEntity){

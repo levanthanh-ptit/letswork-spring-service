@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,6 +26,8 @@ public class TaskEntity {
 
     @Column(columnDefinition = "BIGINT default 0")
     Long spendTime;
+
+    Date finishDate;
 
     public TaskEntity() {
     }
@@ -75,6 +78,13 @@ public class TaskEntity {
                 assignment.remove(e);
             break;
         }
+    }
+    public void finish(){
+        if(finishDate == null){
+            finishDate = new Date();
+            System.out.println("Finish Task "+finishDate.toString());
+        }
+
     }
     //
     // Override Methods

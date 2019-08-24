@@ -67,11 +67,25 @@ public class TaskService {
         return task.getAssignment();
     }
 
-    public void changeGroup(Long id, Long targetGroupId) throws BadRequestException {
+    public TaskEntity changeGroup(Long id, Long targetGroupId) throws BadRequestException {
         TaskEntity task = findTaskById(id);
         GroupEntity targetGroup = groupService.findGroupById(targetGroupId);
+        if (targetGroup.getTitle().compareTo("Finish") == 0) {
+            task.finish();
+        }
         task.setGroup(targetGroup);
-        taskCrud.save(task);
+        return taskCrud.save(task);
+    }
+
+    public void finishTask(Long id) {
+        TaskEntity taskEntity = findTaskById(id);
+        taskEntity.finish();
+        taskCrud.save(taskEntity);
+    }
+
+    public List<TaskEntity> findAllDoneTask(Long projectId) {
+        projectService.findProjectById(projectId);
+        return taskCrud.findAllByGroup_ProjectAndFinishDateIsNotNull(projectId);
     }
 
     public void updateTask(Long id, String title, String description, Long estimateTime, Long spendTime) {

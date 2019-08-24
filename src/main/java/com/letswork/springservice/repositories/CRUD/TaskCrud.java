@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface TaskCrud extends CrudRepository<TaskEntity, Long> {
     public List<TaskEntity> findAllByGroup_Project_Id(Long projectId);
+    public  List<TaskEntity> findAllByGroup_ProjectAndFinishDateIsNotNull(Long projectId);
 }

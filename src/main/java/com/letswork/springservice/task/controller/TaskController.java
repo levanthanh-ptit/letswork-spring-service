@@ -52,9 +52,9 @@ public class TaskController {
     }
 
     @PostMapping(path = "/change-group")
-    public void changeGroup(@RequestParam(name = "id") Long id,
+    public TaskModel changeGroup(@RequestParam(name = "id") Long id,
                             @RequestParam(name = "target_group_id") Long targetGroupId) {
-        taskService.changeGroup(id, targetGroupId);
+        return new TaskModel(taskService.changeGroup(id, targetGroupId));
     }
 
     @PatchMapping(path = "/{id}")
